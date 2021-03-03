@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 const Server = http.createServer(app);
-const ws = new WebSocket.Server({ server: Server });
+const ws = new WebSocket.Server({ server: Server, port: 8081 });
 
 const sockets = [];
 
