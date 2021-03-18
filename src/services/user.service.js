@@ -2,6 +2,8 @@ const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+const userFilter = 'id name newUser password email';
+
 /**
  * Create a user
  * @param {Object} userBody
@@ -35,7 +37,7 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  return User.findById(id).select(userFilter);
 };
 
 /**
@@ -44,7 +46,7 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+  return User.findOne({ email }, userFilter);
 };
 
 /**

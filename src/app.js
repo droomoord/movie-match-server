@@ -41,15 +41,18 @@ ws.on('connection', function (webSocketClient) {
     const msg = JSON.parse(message);
     switch (msg.type) {
       case 'login':
-        webSocketClient.send(
-          JSON.stringify({
-            type: 'message',
-            data: `there was a login by ${msg.data.user.name}`,
-          })
-        );
         webSocketClient.user = msg.data.user;
         console.log('Socket connection was made by', webSocketClient.user.email);
         sockets.push(webSocketClient);
+        sockets.forEach((socket) => {
+          socket.send(
+            JSON.stringify({
+              type: 'message',
+              data: `there was a login by ${msg.data.user.name}`,
+            })
+          );
+        });
+
         break;
 
       case 'request':

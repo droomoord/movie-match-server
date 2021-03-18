@@ -85,7 +85,7 @@ function chooseMovie(api, user, res, req) {
 router.post('/random', auth(), async (req, res) => {
   try {
     const user = await User.findById(req.user.id, 'likes dislikes favourites seen');
-    let api = await fetchMovies(req);
+    let api = await fetchMovies();
     console.log('number of results: ', api.data.results.length);
     if (api.data.results.length > 0) {
       chooseMovie(api, user, res, req);
