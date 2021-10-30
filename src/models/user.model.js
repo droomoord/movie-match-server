@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
@@ -65,6 +66,27 @@ const userSchema = mongoose.Schema(
     newUser: {
       type: Boolean,
       default: true,
+    },
+    config: {
+      rating: {
+        type: Number,
+        default: 6,
+      },
+      voteCount: {
+        type: Number,
+        default: 1000,
+      },
+      date: {
+        min: {
+          type: String,
+          default: moment(new Date()).subtract(10, 'years').format('YYYY-MM-DD'),
+        },
+        max: {
+          type: String,
+          default: moment(new Date()).format('YYYY-MM-DD'),
+        },
+      },
+      genres: [Object],
     },
   },
   {

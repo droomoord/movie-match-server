@@ -1,8 +1,24 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const axios = require('axios');
 
-const userFilter = 'id name newUser password email';
+const userFilter = 'id name newUser password email config';
+
+const getGenres = async () => {
+  try {
+    const { data } = await axios({
+      method: 'get',
+      url: 'https://api.themoviedb.org/3/genre/movie/list',
+      headers: {
+        Authorization: 'Bearer ' + process.env.VUE_APP_TMDB_API_KEY,
+      },
+    });
+    return data.genres;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 /**
  * Create a user
@@ -14,7 +30,16 @@ const createUser = async (userBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   const user = await User.create(userBody);
-  return user;
+  user.config.genres = await getGenres();
+  await user.save();
+  const { id, name, newUser, email, config } = user;
+  return {
+    id,
+    name,
+    newUser,
+    email,
+    config,
+  };
 };
 
 /**

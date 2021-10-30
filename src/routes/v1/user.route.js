@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
+const { User } = require('../../models');
 const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
 
@@ -16,6 +17,16 @@ router
   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+
+router.put('/:userId', auth(), async (req, res) => {
+  const { email, config } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(req.params.userId, { email, config });
+    res.status(200).json({ message: 'user updated' });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;
 
